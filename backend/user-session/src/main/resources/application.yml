@@ -1,0 +1,112 @@
+spring:
+  application:
+    name: user-session
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:edugenelearn}
+    username: ${POSTGRES_USER:edugene}
+    password: ${POSTGRES_PASSWORD:changeme}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+
+  # OAuth2 SSO Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:}
+            client-secret: ${GOOGLE_CLIENT_SECRET:}
+            scope:
+              - email
+              - profile
+          okta:
+            client-id: ${OKTA_CLIENT_ID:}
+            client-secret: ${OKTA_CLIENT_SECRET:}
+            scope:
+              - openid
+              - profile
+              - email
+          azure:
+            client-id: ${AZURE_CLIENT_ID:}
+            client-secret: ${AZURE_CLIENT_SECRET:}
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          okta:
+            issuer-uri: ${OKTA_ISSUER_URI:}
+          azure:
+            issuer-uri: ${AZURE_ISSUER_URI:}
+
+server:
+  port: ${SERVER_PORT:8083}
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:your-super-secret-jwt-key-min-256-bits-change-in-production}
+  expiration: 86400000  # 24 hours in milliseconds
+  refresh-expiration: 604800000  # 7 days in milliseconds
+
+# SSO Configuration
+sso:
+  enabled: ${SSO_ENABLED:false}
+  providers: ${SSO_PROVIDERS:google,okta,azure}
+
+# MFA Configuration
+mfa:
+  enabled: ${MFA_ENABLED:false}
+  issuer: ${MFA_ISSUER:EduGeneLearn}
+  code-validity-seconds: 30
+  backup-codes-count: 10
+
+# Session Configuration
+session:
+  timeout-minutes: 60
+  max-concurrent-sessions: 3
+
+# Password Policy
+password:
+  min-length: 8
+  require-uppercase: true
+  require-lowercase: true
+  require-digit: true
+  require-special-char: true
+
+# Account Lockout
+account:
+  lockout:
+    enabled: true
+    max-failed-attempts: 5
+    lockout-duration-minutes: 30
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+# Logging
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+    com.edugene: DEBUG
+    org.springframework.security: DEBUG

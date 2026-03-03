@@ -1,0 +1,145 @@
+spring:
+  application:
+    name: learning-integrator
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:edugenelearn}
+    username: ${POSTGRES_USER:edugene}
+    password: ${POSTGRES_PASSWORD:changeme}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        use_sql_comments: true
+    open-in-view: false
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 60000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: ${MAX_FILE_SIZE_MB:100}MB
+      max-request-size: ${MAX_FILE_SIZE_MB:100}MB
+      file-size-threshold: 2MB
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: UTC
+
+server:
+  port: ${SERVER_PORT:8081}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# File Storage Configuration
+file:
+  upload:
+    directory: ${FILE_UPLOAD_DIR:./uploads}
+    max-size-mb: ${MAX_FILE_SIZE_MB:100}
+    allowed-types:
+      - vcf
+      - csv
+      - json
+      - txt
+
+# VCF Processing Configuration
+vcf:
+  processing:
+    batch-size: 1000
+    parallel-processing: ${ENABLE_PARALLEL_PROCESSING:true}
+    max-threads: ${VCF_MAX_THREADS:4}
+
+# Resilience4j Configuration
+resilience4j:
+  circuitbreaker:
+    instances:
+      dataProcessing:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+
+  retry:
+    instances:
+      dataProcessing:
+        maxAttempts: 3
+        waitDuration: 100ms
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+
+  ratelimiter:
+    instances:
+      api:
+        limitForPeriod: ${RATE_LIMIT_REQUESTS_PER_MINUTE:100}
+        limitRefreshPeriod: 60s
+        timeoutDuration: 5s
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  health:
+    redis:
+      enabled: true
+    db:
+      enabled: true
+
+# Logging Configuration
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+    com.edugene: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/learning-integrator.log
+    max-size: 10MB
+    max-history: 30
+
+# Application specific configuration
+app:
+  name: EduGeneLearn Learning Integrator
+  version: 1.0.0
+  description: Integrates genomic, educational, and environmental data
