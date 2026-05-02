@@ -1,185 +1,238 @@
 # EduGeneLearn
 
-EduGeneLearn is a production-ready, modular, full-stack web application designed to revolutionize education by integrating genomic data (e.g., VCF files from 23andMe), educational data (e.g., learning style assessments), and environmental data (e.g., socio-economic factors) to provide personalized learning recommendations, 3D genomic visualizations, and collaborative tools.
+EduGeneLearn is a modular full-stack prototype for exploring how genomic, educational, and environmental signals could support personalized learning recommendations. The repository includes a React/Vite frontend, Spring Boot services, Python FastAPI services, PostgreSQL/Redis storage, Docker Compose infrastructure, and mock-friendly local workflows.
 
-## Purpose and Impact
+The current app is designed to be runnable for development and demonstrations. Some advanced platform capabilities, such as enterprise SSO/MFA, real collaboration backends, and production certification workflows, are represented as configuration, UI, test, or roadmap areas rather than complete production implementations.
 
-- **Personalizes Education**: Genomic data can reveal cognitive traits (e.g., memory, attention) that influence learning styles. EduGeneLearn uses these insights to tailor educational strategies, improving outcomes for students globally.
-- **Addresses Educational Disparities**: UNESCO reports 60% of children in low-income countries fail to achieve basic reading and math proficiency. EduGeneLearn provides accessible, data-driven tools to bridge this gap.
-- **Inclusive Design**: Tailors interfaces for all 16 MBTI types, ensuring usability for diverse users.
-- **Global Accessibility**: Open-source architecture ensures deployment in low-resource settings, with multilingual support for diverse users.
+## Screenshots
 
-## Key Features
+![EduGeneLearn screenshot 01](docs/screenshots/screenshot-01.png)
 
-1. **Data Integration**: Aggregates genomic (VCF), educational (CSV), and environmental data (JSON/CSV)
-2. **3D Visualization**: Interactive genomic structures and learning trait mappings using Three.js
-3. **AI-Driven Recommendations**: PyTorch-based learning strategy predictions
-4. **Natural Language Queries**: LLM integration for intuitive interaction
-5. **Real-Time Collaboration**: WebSocket-based collaborative sessions
-6. **Resource Monitoring**: CPU/memory/GPU usage tracking with dynamic multithreading
-7. **User Management**: Support for Users, Moderators, and Admins with SSO and MFA for enterprise
+![EduGeneLearn screenshot 02](docs/screenshots/screenshot-02.png)
+
+![EduGeneLearn screenshot 03](docs/screenshots/screenshot-03.png)
+
+![EduGeneLearn screenshot 04](docs/screenshots/screenshot-04.png)
+
+![EduGeneLearn screenshot 05](docs/screenshots/screenshot-05.png)
+
+![EduGeneLearn screenshot 06](docs/screenshots/screenshot-06.png)
+
+![EduGeneLearn screenshot 07](docs/screenshots/screenshot-07.png)
+
+## Current Capabilities
+
+- **Frontend application**: Home, login, dashboard, analyze, explore, troubleshoot, collaborate, and compliance pages.
+- **Mock login for local development**: Use `admin` / `Admin123!` when backend auth is unavailable.
+- **Genomic upload flow**: Frontend upload UI plus a Spring Boot learning-integrator service for VCF, CSV, and JSON genomic data handling.
+- **AI recommendation service**: FastAPI + PyTorch service for learning profile predictions from genomic, educational, and environmental inputs.
+- **LLM assistance service**: FastAPI service with mock Hugging Face/xAI provider paths for learning, upload, visualization, and troubleshooting prompts.
+- **Compliance readiness page**: NIST Cybersecurity Framework, Section 508, GDPR, European Accessibility Act / EN 301 549, EU AI Act, NIS2, and Cyber Resilience Act tracking content.
+- **Container orchestration**: Docker Compose for PostgreSQL, Redis, API gateway, Java services, Python services, frontend, NGINX, Prometheus, and Grafana.
+- **Kubernetes starter manifests**: Namespace, PostgreSQL, API gateway, and frontend manifests under `infra/kubernetes`.
+
+## Architecture
+
+```text
+React/Vite frontend (3000)
+        |
+        v
+Spring Cloud API Gateway (8080)
+        |
+        +-- learning-integrator (8081): genomic data upload and processing
+        +-- user-session (8083): user model, JWT utility, auth foundation
+        +-- ai-model (8000): learning profile prediction service
+        +-- llm-service (8085): LLM query and troubleshooting service
+        |
+        +-- PostgreSQL (5432)
+        +-- Redis (6379)
+```
+
+The gateway also contains reserved routes for visualization and collaboration APIs. Those services are not currently included in `docker-compose.yml`; the frontend provides local/mock collaboration and exploration experiences for development.
 
 ## Tech Stack
 
-- **Frontend**: React 18, Three.js, Tailwind CSS, Vite, Socket.IO
-- **Backend**: Java 17, Spring Boot 3, Spring Cloud Gateway, Spring Security, Spring WebSocket
-- **AI Service**: Python 3.10, FastAPI, PyTorch, BioPython
-- **LLM Service**: Python 3.10, FastAPI, Hugging Face Transformers
-- **Database**: PostgreSQL, Redis
-- **Authentication**: JWT, OAuth2, SSO with MFA
-- **Infrastructure**: Docker, Docker Compose, Kubernetes, NGINX
-- **CI/CD**: GitHub Actions
-- **Monitoring**: Prometheus, Grafana, SLF4J, Loki
+- **Frontend**: React 18, Vite, React Router, Axios, Three.js, Recharts, Socket.IO client, custom CSS.
+- **Java backend**: Java 17, Spring Boot 3, Spring Cloud Gateway, Spring Security, Spring Data JPA, JJWT.
+- **Python services**: Python 3.10+, FastAPI, PyTorch, NumPy, Redis client.
+- **Data stores**: PostgreSQL 15, Redis 7.
+- **Infrastructure**: Docker, Docker Compose, NGINX, Prometheus, Grafana, Kubernetes manifests.
+- **Testing/tooling**: ESLint, Jest, Playwright, Maven, pytest.
 
 ## Prerequisites
 
-### For Running with Containers
-- **Docker** and Docker Compose **OR Podman** and Podman Compose
 - Git
-
-### For Local Development
 - Node.js 18+
 - Java 17+
-- Python 3.10+
-- PostgreSQL 15+ (or use container)
-- Redis 7+ (or use container)
+- Python 3.10+; Python 3.13 also works for the local checks used in this repo
+- Docker Compose or Podman Compose for full-stack container runs
 
-### Optional
-- Kubernetes CLI (for K8s deployment)
-- xAI or Hugging Face API key (for LLM service)
+## Quick Start: Frontend Mock Mode
 
-## Quick Start
-
-### Option 1: Using Podman (Recommended for this setup)
+This is the fastest way to run the application UI without backend services.
 
 ```bash
-# Clone the repository
-git clone https://github.com/sekacorn/Edu-Gene-Learn.git
-cd Edu-Gene-Learn
-
-# Copy environment template
-cp .env.example .env
-# Edit .env with your settings (optional for basic testing)
-
-# Start with Podman Compose
-podman-compose up --build
-
-# Or see PODMAN_SETUP.md for detailed Podman instructions
+cd frontend
+npm install
+npm run dev
 ```
 
-### Option 2: Using Docker
+Open `http://localhost:3000`.
+
+Demo credentials:
+
+```text
+Username: admin
+Password: Admin123!
+```
+
+Useful routes:
+
+- `http://localhost:3000/`
+- `http://localhost:3000/login`
+- `http://localhost:3000/dashboard`
+- `http://localhost:3000/analyze`
+- `http://localhost:3000/explore`
+- `http://localhost:3000/troubleshoot`
+- `http://localhost:3000/collaborate`
+- `http://localhost:3000/compliance`
+
+## Full Stack with Docker Compose
 
 ```bash
-# Clone the repository
-git clone https://github.com/sekacorn/Edu-Gene-Learn.git
-cd Edu-Gene-Learn
-
-# Copy environment template
 cp .env.example .env
-
-# Start with Docker Compose
 docker-compose up --build
 ```
 
-### Option 3: Local Development (No Containers)
+Main endpoints:
 
-See PODMAN_SETUP.md for running services locally without containers.
+- Frontend: `http://localhost:3000`
+- API Gateway: `http://localhost:8080`
+- Learning Integrator: `http://localhost:8081`
+- User Session: `http://localhost:8083`
+- AI Model: `http://localhost:8000`
+- LLM Service: `http://localhost:8085`
+- Prometheus: `http://localhost:9090`
+- Grafana: `http://localhost:3001`
 
-### Access the Application
+Before using real data or public deployments, update `.env` secrets such as `POSTGRES_PASSWORD`, `JWT_SECRET`, API keys, and Grafana credentials.
 
-Once running:
-- Frontend: http://localhost:3000
-- API Gateway: http://localhost:8080
-- Troubleshooting: http://localhost:3000/troubleshoot
-- Collaboration: http://localhost:3000/collaborate
+## Local Development Commands
 
-## Kubernetes Deployment (Optional)
-
-For production deployment to Kubernetes:
+Frontend:
 
 ```bash
-kubectl apply -f infra/kubernetes/
-
-# Check deployment status
-kubectl get pods -n edugenelearn
-kubectl get services -n edugenelearn
+cd frontend
+npm install
+npm run lint
+npm run build
+npm run dev
 ```
 
-**Note**: Kubernetes deployment is optional. The application can run with Podman/Docker or locally.
+Java services:
 
-## User Roles
+```bash
+cd backend/learning-integrator
+mvn test
+mvn spring-boot:run
 
-- **Users**: Standard access to learning recommendations and visualizations
-- **Moderators**: Can manage user content and moderate collaborative sessions
-- **Admins**: Full system access with user management capabilities
-- **Enterprise**: SSO integration with optional MFA for enhanced security
+cd ../user-session
+mvn test
+mvn spring-boot:run
+
+cd ../api-gateway
+mvn test
+mvn spring-boot:run
+```
+
+Python services:
+
+```bash
+cd ai-model
+pip install -r requirements.txt
+uvicorn learning_predictor:app --reload --port 8000
+
+cd ../backend/llm-service
+pip install -r requirements.txt
+uvicorn llm_service:app --reload --port 8085
+```
 
 ## Testing
 
-The application includes comprehensive testing:
-- Unit tests for all components
-- Integration tests for API endpoints
-- End-to-end tests for user workflows
-
-### Run Tests
+Frontend:
 
 ```bash
-# Backend tests
-cd backend/[service-name]
-./mvnw test
-
-# Frontend tests
 cd frontend
+npm run lint
+npm run build
 npm test
-
-# AI/LLM service tests
-cd ai-model
-pytest
-
-# E2E tests (no backend required - uses mock mode)
-cd frontend
 npm run test:e2e
 ```
 
-**Note**: E2E tests run in mock mode by default (no backend services required). See `frontend/tests/e2e/STANDALONE_TESTING.md` for details.
+Backend:
+
+```bash
+cd backend/learning-integrator
+mvn test
+
+cd ../user-session
+mvn test
+
+cd ../api-gateway
+mvn test
+```
+
+Python:
+
+```bash
+cd ai-model
+pytest
+
+cd ../backend/llm-service
+pytest
+```
+
+The Playwright E2E suite is designed to run in mock mode for local development. See `frontend/tests/e2e/STANDALONE_TESTING.md`.
+
+## Compliance Readiness
+
+The Compliance page is an implementation readiness tracker, not a legal certification. It currently documents control areas for:
+
+- **NIST Cybersecurity Framework**: Identify, Protect, Detect, Respond, and Recover.
+- **Section 508**: Keyboard access, semantic structure, readable contrast, responsive behavior, and assistive technology support.
+- **GDPR**: Special category data handling, consent, purpose limitation, minimization, retention, access, and deletion workflows.
+- **European Accessibility Act / EN 301 549**: Accessible digital service expectations for European markets.
+- **EU AI Act**: Education-related AI governance, transparency, documentation, risk management, and human oversight readiness.
+- **NIS2 Directive**: Cybersecurity governance, incident handling, continuity, and supplier risk themes.
+- **Cyber Resilience Act**: Secure-by-design, vulnerability handling, and lifecycle security considerations for digital products.
+
+Any deployment that handles real genomic or student data should receive legal, privacy, accessibility, and security review before production use.
+
+## Security Notes
+
+- Do not commit real `.env` secrets.
+- Rotate `JWT_SECRET`, database passwords, API keys, and Grafana credentials before deployment.
+- Treat genomic data as highly sensitive personal data.
+- Add TLS, hardened headers, audit logging, retention policies, backup policies, and incident response playbooks before production use.
+- The repo contains readiness language for GDPR/COPPA/Section 508/NIST/EU obligations; it does not by itself make a deployment compliant.
+
+## Documentation Map
+
+- `QUICKSTART.md`: setup paths for frontend mock mode, Docker Compose, and local services.
+- `PROJECT_STRUCTURE.md`: current repo layout and service inventory.
+- `PODMAN_SETUP.md`: Podman-focused setup notes.
+- `TESTING_WITHOUT_INFRASTRUCTURE.md`: mock-mode validation workflow.
+- `frontend/tests/e2e/README.md`: Playwright test coverage and commands.
 
 ## License
 
 This project is dual-licensed:
-- **Non-profit use**: Free and open-source (see LICENSE file)
-- **Commercial use**: Requires 6% of gross income license fee
 
-For commercial licensing inquiries, contact: Sekacorn@gmail.com
+- **Non-profit use**: Free and open-source; see `LICENSE`.
+- **Commercial use**: Requires a 6% gross income license fee; see `LICENSE`.
 
-## Copyright Disclaimer
-
-EduGeneLearn is an original work, using open-source libraries for compatibility with VCF, CSV, and JSON formats, without proprietary code from PyMOL, Blender, Moodle, or other tools. All dependencies use Apache 2.0 or MIT licenses.
-
-## MBTI Usability
-
-The application is designed to support all 16 MBTI personality types with tailored interfaces:
-- ENTJ, INFP, INFJ, ESTP, INTJ, INTP, ISTJ, ESFJ
-- ISFP, ENTP, ISFJ, ESFP, ENFJ, ESTJ, ISTP
-
-Each type receives customized UI elements, LLM responses, and collaboration features suited to their cognitive preferences.
-
-## Security
-
-- Input validation and sanitization
-- TLS encryption for data in transit
-- AES-256 encryption for data at rest
-- Rate limiting and CORS/CSRF protection
-- OWASP compliance
-- GDPR and COPPA compliance considerations
-
-## Support
-
-For issues, questions, or contributions, please contact: Sekacorn@gmail.com
+For commercial licensing inquiries, contact `Sekacorn@gmail.com`.
 
 ## Author
 
-Created by sekacorn - Advancing humanity through personalized, genomic-driven education.
-
-## Advancing Humanity
-
-By leveraging genomic insights to personalize education, EduGeneLearn addresses global educational disparities, empowers educators and students with data-driven tools, and provides scalable, inclusive solutions for diverse learning needs worldwide.
+Created by sekacorn.

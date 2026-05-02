@@ -62,7 +62,6 @@ The following are automatically mocked:
 
 4. **LLM Queries**
    - Chat messages return mock responses
-   - MBTI-tailored responses are simulated
    - No LLM service required
 
 5. **Collaboration**
@@ -135,7 +134,6 @@ export const mockResponses = {
         username: 'testuser',
         email: 'test@example.com',
         role: 'USER',
-        mbtiType: 'INTJ',
       },
     },
   },

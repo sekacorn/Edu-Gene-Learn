@@ -40,7 +40,6 @@ export const mockResponses = {
         username: 'admin',
         email: 'admin@edugenelearn.com',
         role: 'ADMIN',
-        mbtiType: 'INTJ',
       },
     },
     failure: {
@@ -79,7 +78,6 @@ export const mockResponses = {
       response: 'To import your genomic data (VCF file from 23andMe or AncestryDNA), go to the Data Upload page and select your VCF file. The system supports VCF, CSV, and JSON formats.',
       modelUsed: 'huggingface',
       cached: false,
-      mbtiTailored: true,
     },
   },
 

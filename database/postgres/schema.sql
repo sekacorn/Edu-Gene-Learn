@@ -13,13 +13,6 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- User roles enum
 CREATE TYPE user_role AS ENUM ('USER', 'MODERATOR', 'ADMIN');
 
--- MBTI types enum
-CREATE TYPE mbti_type AS ENUM (
-    'ENTJ', 'INFP', 'INFJ', 'ESTP', 'INTJ', 'INTP',
-    'ISTJ', 'ESFJ', 'ISFP', 'ENTP', 'ISFJ', 'ESFP',
-    'ENFJ', 'ESTJ', 'ISTP', 'ENFP'
-);
-
 -- Users table
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -28,7 +21,6 @@ CREATE TABLE users (
     password_hash VARCHAR(255),  -- NULL for SSO users
     full_name VARCHAR(255),
     role user_role DEFAULT 'USER' NOT NULL,
-    mbti_type mbti_type,
     is_active BOOLEAN DEFAULT TRUE,
     is_email_verified BOOLEAN DEFAULT FALSE,
     sso_provider VARCHAR(50),  -- okta, auth0, azure-ad, google, NULL for local auth
@@ -315,7 +307,7 @@ CREATE TABLE llm_queries (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES users(id) ON DELETE SET NULL,
     query_text TEXT NOT NULL,
-    query_context JSONB,  -- User's MBTI type, current view, etc.
+    query_context JSONB,  -- Current view and relevant user context
     response_text TEXT NOT NULL,
     model_used VARCHAR(100),
     tokens_used INTEGER,

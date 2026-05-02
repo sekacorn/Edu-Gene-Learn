@@ -10,6 +10,7 @@ import Troubleshoot from './pages/Troubleshoot';
 import Collaborate from './pages/Collaborate';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Compliance from './pages/Compliance';
 
 // Components
 import Navbar from './components/Navbar';
@@ -24,7 +25,6 @@ import ProtectedRoute from './components/ProtectedRoute';
  * - AI-driven learning recommendations
  * - Natural language queries
  * - Real-time collaboration
- * - MBTI-tailored experience
  *
  * @author sekacorn
  * @version 1.0.0
@@ -40,6 +40,7 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/compliance" element={<Compliance />} />
 
             {/* Protected Routes */}
             <Route

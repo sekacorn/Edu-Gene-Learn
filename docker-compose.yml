@@ -98,33 +98,6 @@ services:
       timeout: 10s
       retries: 3
 
-  learning-visualizer:
-    build:
-      context: ./backend/learning-visualizer
-      dockerfile: Dockerfile
-    container_name: edugene-learning-visualizer
-    ports:
-      - "8082:8082"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: edugenelearn
-      POSTGRES_USER: edugene
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - edugene-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
   user-session:
     build:
       context: ./backend/user-session
@@ -153,35 +126,6 @@ services:
       - edugene-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  collaboration-service:
-    build:
-      context: ./backend/collaboration-service
-      dockerfile: Dockerfile
-    container_name: edugene-collaboration-service
-    ports:
-      - "8084:8084"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: edugenelearn
-      POSTGRES_USER: edugene
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - edugene-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 3

@@ -63,7 +63,7 @@ test.describe('Collaboration Features', () => {
     await expect(page.locator('text=Participants, text=Connected')).toBeVisible({ timeout: 10000 });
   });
 
-  test('should display session participants', async ({ page, context }) => {
+  test('should display session participants', async ({ page }) => {
     // Create session
     await page.goto('/collaborate');
     await page.click('button:has-text("Create Session")');
@@ -129,28 +129,6 @@ test.describe('Collaboration Features', () => {
       // Should show connection status indicator
       await expect(page.locator('text=Connected, .status-connected, .online')).toBeVisible({ timeout: 10000 });
     }
-  });
-});
-
-test.describe('MBTI-Tailored Collaboration', () => {
-
-  test('should adapt collaboration UI for different MBTI types', async ({ page }) => {
-    // Set MBTI to ENTJ (leadership-focused)
-    await page.goto('/login');
-    await page.fill('input[name="username"]', 'admin');
-    await page.fill('input[name="password"]', 'Admin123!');
-    await page.click('button[type="submit"]');
-
-    await page.goto('/profile');
-    await page.selectOption('select[name="mbtiType"]', 'ENTJ');
-    await page.click('button:has-text("Save")');
-
-    // Go to collaboration
-    await page.goto('/collaborate');
-
-    // ENTJ should see leadership-oriented features
-    // This is a conceptual test - actual implementation may vary
-    await expect(page.locator('button, text')).toBeVisible();
   });
 });
 

@@ -55,10 +55,6 @@ public class User {
     @Builder.Default
     private UserRole role = UserRole.USER;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "mbti_type")
-    private MBTIType mbtiType;
-
     @Column(name = "is_active")
     @Builder.Default
     private Boolean isActive = true;

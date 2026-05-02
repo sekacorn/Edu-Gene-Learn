@@ -12,13 +12,13 @@ Version: 1.0.0
 
 import os
 import logging
-from typing import List, Dict, Any
+from typing import List
 from contextlib import asynccontextmanager
 
 import torch
 import torch.nn as nn
 import numpy as np
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 import uvicorn
@@ -55,9 +55,6 @@ class LearningProfileInput(BaseModel):
     tech_access_score: float = Field(ge=0.0, le=1.0, description="Technology access score")
     study_env_quality: float = Field(ge=0.0, le=1.0, description="Study environment quality")
     internet_quality: float = Field(ge=0.0, le=1.0, description="Internet quality score")
-
-    # MBTI influence (optional)
-    mbti_type: str = Field(default="", description="MBTI personality type")
 
 
 class LearningRecommendation(BaseModel):
@@ -253,7 +250,7 @@ async def predict_learning_profile(profile: LearningProfileInput):
     and environmental factors to provide personalized learning strategies.
     """
     try:
-        logger.info(f"Received prediction request for MBTI type: {profile.mbti_type}")
+        logger.info("Received learning profile prediction request")
 
         # Preprocess input
         input_tensor = preprocess_input(profile)

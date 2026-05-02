@@ -1,0 +1,317 @@
+:root {
+  color: #172033;
+  background: #f5f7fb;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.bg-gray-50 {
+  background: #f5f7fb;
+}
+
+.container {
+  width: min(1120px, calc(100% - 32px));
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.px-4 {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.py-8 {
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+.app-nav {
+  border-bottom: 1px solid #dfe5ef;
+  background: #ffffff;
+}
+
+.app-nav__inner {
+  align-items: center;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  min-height: 64px;
+}
+
+.brand {
+  color: #0f3d5e;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.nav-links {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nav-link,
+.nav-button,
+.button {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  display: inline-flex;
+  font-weight: 700;
+  min-height: 38px;
+  padding: 8px 12px;
+}
+
+.nav-link {
+  color: #334155;
+}
+
+.nav-link:hover {
+  background: #eef3f8;
+}
+
+.nav-link.active {
+  background: #dfeefa;
+  color: #0f3d5e;
+}
+
+.nav-button,
+.button {
+  background: #0f766e;
+  color: #ffffff;
+}
+
+.button.secondary {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.button.danger {
+  background: #b42318;
+}
+
+.page-stack {
+  display: grid;
+  gap: 24px;
+}
+
+.hero,
+.panel,
+.card {
+  background: #ffffff;
+  border: 1px solid #dfe5ef;
+  border-radius: 8px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.hero {
+  display: grid;
+  gap: 20px;
+  padding: 32px;
+}
+
+.panel,
+.card {
+  padding: 24px;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.grid.two {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  color: #102a43;
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  color: #102a43;
+  font-size: 26px;
+}
+
+h3 {
+  color: #19324a;
+}
+
+p,
+li {
+  color: #475569;
+  line-height: 1.6;
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label {
+  color: #334155;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  min-height: 42px;
+  padding: 10px 12px;
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.metric {
+  border-left: 4px solid #0f766e;
+  padding-left: 12px;
+}
+
+.muted {
+  color: #64748b;
+}
+
+.eyebrow {
+  color: #0f766e;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.status {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 6px;
+  color: #065f46;
+  padding: 10px 12px;
+}
+
+.credential-list {
+  display: grid;
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.credential-list div {
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #dbe3ef;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+code {
+  background: #102a43;
+  border-radius: 4px;
+  color: #ffffff;
+  padding: 4px 6px;
+}
+
+.compliance-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.compliance-item {
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.check-list {
+  display: grid;
+  gap: 10px;
+  padding-left: 20px;
+}
+
+.visualization {
+  align-items: center;
+  aspect-ratio: 16 / 9;
+  background:
+    radial-gradient(circle at 25% 30%, rgba(20, 184, 166, 0.35), transparent 30%),
+    radial-gradient(circle at 70% 65%, rgba(14, 116, 144, 0.28), transparent 34%),
+    linear-gradient(135deg, #102a43, #145369);
+  border-radius: 8px;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  min-height: 240px;
+}
+
+@media (max-width: 720px) {
+  .app-nav__inner {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-bottom: 12px;
+    padding-top: 12px;
+  }
+
+  .hero,
+  .panel,
+  .card {
+    padding: 20px;
+  }
+}

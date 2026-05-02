@@ -5,7 +5,6 @@ This service provides natural language query capabilities for:
 - Genomic data interpretation
 - Learning recommendations
 - Troubleshooting assistance
-- MBTI-tailored responses
 
 Supports:
 - Hugging Face Transformers (local models)
@@ -44,33 +43,11 @@ REDIS_PORT = int(os.getenv('REDIS_PORT', '6379'))
 # Redis client for caching
 redis_client = None
 
-# MBTI-specific prompt templates
-MBTI_PROMPTS = {
-    'ENTJ': "Provide strategic, goal-oriented advice with actionable steps.",
-    'INFP': "Offer creative, value-driven suggestions with a narrative approach.",
-    'INFJ': "Give intuitive, empathetic guidance with holistic context.",
-    'ESTP': "Deliver concise, action-oriented tips with immediate applicability.",
-    'INTJ': "Present analytical, strategic insights with detailed logic.",
-    'INTP': "Provide logical, detailed explanations with theoretical depth.",
-    'ISTJ': "Offer structured, step-by-step guidance with precision.",
-    'ESFJ': "Give supportive, community-focused advice with warm encouragement.",
-    'ISFP': "Suggest gentle, sensory-driven ideas with creative freedom.",
-    'ENTP': "Present innovative, idea-sparking responses with wit.",
-    'ISFJ': "Provide nurturing, practical advice with clear instructions.",
-    'ESFP': "Deliver lively, action-oriented tips with enthusiasm.",
-    'ENFJ': "Offer inspirational, visionary guidance with motivational tone.",
-    'ESTJ': "Give direct, results-driven advice with clear metrics.",
-    'ISTP': "Provide practical, hands-on solutions with minimalist approach.",
-    'ENFP': "Suggest creative, enthusiastic ideas with exploratory tone."
-}
-
-
 class QueryRequest(BaseModel):
     """Request schema for LLM queries."""
 
     query: str = Field(..., description="User's natural language query")
     context: Optional[Dict[str, Any]] = Field(default={}, description="Additional context")
-    mbti_type: Optional[str] = Field(default=None, description="User's MBTI type for personalized response")
     user_id: Optional[str] = Field(default=None, description="User ID for context")
 
 
@@ -80,7 +57,6 @@ class QueryResponse(BaseModel):
     response: str = Field(..., description="LLM-generated response")
     model_used: str = Field(..., description="Model used for generation")
     cached: bool = Field(default=False, description="Whether response was cached")
-    mbti_tailored: bool = Field(default=False, description="Whether response was tailored for MBTI")
 
 
 class TroubleshootRequest(BaseModel):
@@ -89,7 +65,6 @@ class TroubleshootRequest(BaseModel):
     error_type: str = Field(..., description="Type of error encountered")
     error_message: str = Field(..., description="Error message")
     user_context: Optional[Dict[str, Any]] = Field(default={}, description="User context")
-    mbti_type: Optional[str] = Field(default=None, description="User's MBTI type")
 
 
 class LLMService:
@@ -141,26 +116,23 @@ class LLMService:
             logger.error(f"Error initializing xAI: {e}")
             self.model = None
 
-    def generate_response(self, query: str, mbti_type: Optional[str] = None,
-                         context: Optional[Dict] = None) -> str:
+    def generate_response(self, query: str, context: Optional[Dict] = None) -> str:
         """
         Generate LLM response for a query.
 
         Args:
             query: User's natural language query
-            mbti_type: User's MBTI type for personalization
             context: Additional context
 
         Returns:
             Generated response string
         """
         try:
-            # Build prompt with MBTI tailoring
-            prompt = self._build_prompt(query, mbti_type, context)
+            self._build_prompt(query, context)
 
             # In production, this would call the actual LLM
             # For demonstration, we generate a mock response
-            response = self._generate_mock_response(query, mbti_type, context)
+            response = self._generate_mock_response(query, context)
 
             return response
 
@@ -168,14 +140,9 @@ class LLMService:
             logger.error(f"Error generating response: {e}")
             return "I apologize, but I encountered an error processing your query. Please try again."
 
-    def _build_prompt(self, query: str, mbti_type: Optional[str],
-                     context: Optional[Dict]) -> str:
-        """Build LLM prompt with MBTI tailoring."""
+    def _build_prompt(self, query: str, context: Optional[Dict]) -> str:
+        """Build LLM prompt."""
         prompt_parts = []
-
-        # Add MBTI-specific instruction
-        if mbti_type and mbti_type in MBTI_PROMPTS:
-            prompt_parts.append(f"Style: {MBTI_PROMPTS[mbti_type]}")
 
         # Add context if available
         if context:
@@ -186,8 +153,7 @@ class LLMService:
 
         return "\n".join(prompt_parts)
 
-    def _generate_mock_response(self, query: str, mbti_type: Optional[str],
-                               context: Optional[Dict]) -> str:
+    def _generate_mock_response(self, query: str, context: Optional[Dict]) -> str:
         """Generate a mock response for demonstration."""
 
         # Analyze query type
@@ -240,38 +206,7 @@ class LLMService:
                 "What would you like to know more about?"
             )
 
-        # Tailor response for MBTI type
-        if mbti_type:
-            base_response = self._tailor_for_mbti(base_response, mbti_type)
-
         return base_response
-
-    def _tailor_for_mbti(self, response: str, mbti_type: str) -> str:
-        """Tailor response tone and style for MBTI type."""
-
-        mbti_additions = {
-            'ENTJ': " Take action on these strategic recommendations to optimize your learning outcomes.",
-            'INFP': " I hope these suggestions resonate with your learning journey and values.",
-            'INFJ': " These insights are designed to align with your holistic approach to learning.",
-            'ESTP': " Try these tips right away for immediate results!",
-            'INTJ': " This systematic approach should help you achieve your learning goals efficiently.",
-            'INTP': " Feel free to explore these concepts in depth and ask follow-up questions.",
-            'ISTJ': " Follow these structured steps for reliable results.",
-            'ESFJ': " I'm here to support you every step of the way in your learning journey!",
-            'ISFP': " Explore these gentle suggestions at your own pace and see what feels right.",
-            'ENTP': " These innovative approaches might spark new ideas for your learning!",
-            'ISFJ': " These practical, tried-and-true methods will help you succeed.",
-            'ESFP': " Let's make learning fun and engaging with these dynamic strategies!",
-            'ENFJ': " Together, we can unlock your full learning potential!",
-            'ESTJ': " Here are clear, actionable steps to improve your results.",
-            'ISTP': " This hands-on, practical approach should work well for you.",
-            'ENFP': " Exciting possibilities await as you explore these creative learning strategies!"
-        }
-
-        if mbti_type in mbti_additions:
-            response += mbti_additions[mbti_type]
-
-        return response
 
 
 # Global LLM service instance
@@ -309,7 +244,7 @@ async def lifespan(app: FastAPI):
 # Create FastAPI app
 app = FastAPI(
     title="EduGeneLearn LLM Service",
-    description="Natural language query service with MBTI-tailored responses",
+    description="Natural language query service",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -327,11 +262,11 @@ app.add_middleware(
 @app.post("/api/v1/llm/query", response_model=QueryResponse)
 async def query_llm(request: QueryRequest):
     """
-    Process natural language query with optional MBTI personalization.
+    Process natural language query.
     """
     try:
         # Check cache
-        cache_key = f"llm:query:{request.query}:{request.mbti_type}"
+        cache_key = f"llm:query:{request.query}"
         cached_response = None
 
         if redis_client:
@@ -345,14 +280,12 @@ async def query_llm(request: QueryRequest):
             return QueryResponse(
                 response=cached_response,
                 model_used=LLM_PROVIDER,
-                cached=True,
-                mbti_tailored=request.mbti_type is not None
+                cached=True
             )
 
         # Generate new response
         response_text = llm_service.generate_response(
             query=request.query,
-            mbti_type=request.mbti_type,
             context=request.context
         )
 
@@ -366,8 +299,7 @@ async def query_llm(request: QueryRequest):
         return QueryResponse(
             response=response_text,
             model_used=LLM_PROVIDER,
-            cached=False,
-            mbti_tailored=request.mbti_type is not None
+            cached=False
         )
 
     except Exception as e:
@@ -392,14 +324,12 @@ async def troubleshoot(request: TroubleshootRequest):
 
         response_text = llm_service.generate_response(
             query=query,
-            mbti_type=request.mbti_type,
             context=context
         )
 
         return {
             "analysis": response_text,
-            "error_type": request.error_type,
-            "mbti_tailored": request.mbti_type is not None
+            "error_type": request.error_type
         }
 
     except Exception as e:

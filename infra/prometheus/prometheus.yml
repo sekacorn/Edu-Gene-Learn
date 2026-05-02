@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: api-gateway
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - api-gateway:8080
+
+  - job_name: learning-integrator
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - learning-integrator:8081
+
+  - job_name: user-session
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - user-session:8083

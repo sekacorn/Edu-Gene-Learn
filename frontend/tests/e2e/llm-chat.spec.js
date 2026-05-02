@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 /**
  * E2E Tests for LLM Natural Language Queries
- * Tests: Chat interface, MBTI personalization, troubleshooting
+ * Tests: Chat interface and troubleshooting
  */
 
 test.describe('LLM Chat Interface', () => {
@@ -61,40 +61,6 @@ test.describe('LLM Chat Interface', () => {
 
     // Should mention analysis or recommendations
     await expect(page.locator('text=recommendations, text=analysis, text=profile')).toBeVisible({ timeout: 15000 });
-  });
-
-  test('should provide MBTI-tailored responses for ENTJ', async ({ page }) => {
-    // Set MBTI to ENTJ
-    await page.goto('/profile');
-    await page.selectOption('select[name="mbtiType"]', 'ENTJ');
-    await page.click('button:has-text("Save")');
-
-    await page.goto('/dashboard');
-    await page.click('button:has-text("Chat"), .chat-widget');
-
-    const chatInput = page.locator('input[placeholder*="Ask"], textarea[placeholder*="question"]');
-    await chatInput.fill('Give me study tips');
-    await page.keyboard.press('Enter');
-
-    // ENTJ should get strategic, action-oriented response
-    await expect(page.locator('text=strategic, text=goal, text=action')).toBeVisible({ timeout: 15000 });
-  });
-
-  test('should provide MBTI-tailored responses for INFP', async ({ page }) => {
-    // Set MBTI to INFP
-    await page.goto('/profile');
-    await page.selectOption('select[name="mbtiType"]', 'INFP');
-    await page.click('button:has-text("Save")');
-
-    await page.goto('/dashboard');
-    await page.click('button:has-text("Chat"), .chat-widget');
-
-    const chatInput = page.locator('input[placeholder*="Ask"], textarea[placeholder*="question"]');
-    await chatInput.fill('Give me study tips');
-    await page.keyboard.press('Enter');
-
-    // INFP should get creative, value-driven response
-    await expect(page.locator('text=creative, text=value, text=resonate')).toBeVisible({ timeout: 15000 });
   });
 
   test('should handle visualization questions', async ({ page }) => {

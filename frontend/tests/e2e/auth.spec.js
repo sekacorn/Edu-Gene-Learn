@@ -49,9 +49,6 @@ test.describe('Authentication', () => {
     await page.fill('input[name="confirmPassword"]', testUser.password);
     await page.fill('input[name="fullName"]', testUser.fullName);
 
-    // Select MBTI type
-    await page.selectOption('select[name="mbtiType"]', 'INTJ');
-
     // Submit form
     await page.click('button[type="submit"]');
 

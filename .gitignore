@@ -19,6 +19,8 @@ pnpm-debug.log*
 
 # Environment / secrets
 .env
+.env.*
+!.env.example
 .env.local
 .env.*.local
 *.pem
@@ -40,6 +42,7 @@ secrets/
 *.war
 *.ear
 *.nar
+.m2/
 .gradle/
 target/
 build/
@@ -52,16 +55,20 @@ __pycache__/
 *.pyo
 *.so
 .python-version
+.python-version*
 .venv/
 venv/
 env/
 ENV/
+*.venv/
 pip-wheel-metadata/
 *.egg
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.pyre/
+.tox/
 .hypothesis/
 .coverage
 .coverage.*
@@ -74,29 +81,42 @@ node_modules/
 .npm/
 .pnpm-store/
 .yarn/
+.vite/
 .next/
 .nuxt/
 .svelte-kit/
 dist-ssr/
 coverage/
 .nyc_output/
+playwright-report/
+test-results/
+blob-report/
+jest-junit.xml
 
 # Docker / containers
 .dockerignore
+docker-compose.override.yml
 
 # Databases / local data
 *.db
 *.sqlite
 *.sqlite3
+postgres-data/
+redis-data/
+prometheus-data/
+grafana-data/
 
 # Temporary files
 tmp/
 temp/
 *.tmp
+uploads/
+local-data/
 
 # ML model artifacts
 *.pt
 *.pth
 *.h5
 *.pkl
+*.onnx
 model.pt

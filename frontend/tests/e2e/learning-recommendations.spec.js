@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 /**
  * E2E Tests for AI Learning Recommendations
- * Tests: Recommendation display, MBTI personalization, AI predictions
+ * Tests: Recommendation display and AI predictions
  */
 
 test.describe('Learning Recommendations', () => {
@@ -33,9 +33,9 @@ test.describe('Learning Recommendations', () => {
     await page.goto('/analyze');
 
     // Fill in sample learning profile data
-    await page.fill('input[name="currentVisualScore"]', '75');
-    await page.fill('input[name="currentAuditoryScore"]', '60');
-    await page.fill('input[name="currentKinestheticScore"]', '50');
+    await page.fill('input[name="current_visual_score"]', '75');
+    await page.fill('input[name="current_auditory_score"]', '60');
+    await page.fill('input[name="current_kinesthetic_score"]', '50');
 
     // Submit for analysis
     await page.click('button:has-text("Get Recommendations")');
@@ -53,34 +53,6 @@ test.describe('Learning Recommendations', () => {
 
     // Should have at least some strategies (or show empty state)
     expect(count).toBeGreaterThanOrEqual(0);
-  });
-
-  test('should show MBTI-tailored recommendations for ENTJ', async ({ page }) => {
-    // Update user MBTI to ENTJ
-    await page.goto('/profile');
-    await page.selectOption('select[name="mbtiType"]', 'ENTJ');
-    await page.click('button:has-text("Save")');
-
-    // Get recommendations
-    await page.goto('/analyze');
-    await page.click('button:has-text("Get Recommendations")');
-
-    // ENTJ should get strategic, goal-oriented advice
-    await expect(page.locator('text=strategic, text=goal, text=action')).toBeVisible({ timeout: 10000 });
-  });
-
-  test('should show MBTI-tailored recommendations for INFP', async ({ page }) => {
-    // Update user MBTI to INFP
-    await page.goto('/profile');
-    await page.selectOption('select[name="mbtiType"]', 'INFP');
-    await page.click('button:has-text("Save")');
-
-    // Get recommendations
-    await page.goto('/analyze');
-    await page.click('button:has-text("Get Recommendations")');
-
-    // INFP should get creative, value-driven advice
-    await expect(page.locator('text=creative, text=value, text=narrative')).toBeVisible({ timeout: 10000 });
   });
 
   test('should display confidence score for predictions', async ({ page }) => {
@@ -119,12 +91,12 @@ test.describe('Learning Recommendations', () => {
     await page.goto('/analyze');
 
     // Get initial recommendations
-    await page.fill('input[name="currentVisualScore"]', '30');
+    await page.fill('input[name="current_visual_score"]', '30');
     await page.click('button:has-text("Get Recommendations")');
     const initialText = await page.locator('.recommendations').textContent();
 
     // Change profile
-    await page.fill('input[name="currentVisualScore"]', '90');
+    await page.fill('input[name="current_visual_score"]', '90');
     await page.click('button:has-text("Get Recommendations")');
 
     // Recommendations should update
